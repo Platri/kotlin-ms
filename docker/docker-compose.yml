@@ -1,0 +1,17 @@
+version: '3'
+services:
+  kotlin-ms:
+    image: kotlin-ms:latest
+    environment:
+      RABBITMQ_HOST: docker-rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_QUEUE_INPUT: numbers
+      RABBITMQ_QUEUE_OUTPUT: results
+    ports:
+      - "8080:8080"
+        
+networks:
+  amqp_network:
+    external: true

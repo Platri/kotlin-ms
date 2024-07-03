@@ -1,7 +1,9 @@
 import com.rabbitmq.client.ConnectionFactory
+import kotlinx.coroutines.*
+import kotlin.random.Random
 
 object Producer {
-    fun runProducer() {
+    fun runProducer() = runBlocking {
         val factory = ConnectionFactory().apply {
             host = Config.rabbitmqHost
             port = Config.rabbitmqPort
@@ -10,19 +12,23 @@ object Producer {
         }
 
         factory.newConnection().use { connection ->
-            connection.createChannel().use { channel ->
-                val queueName = "numbers"
-                channel.queueDeclare(queueName, true, false, false, null)
+            val jobs = List(1) { // Anzahl der parallel laufenden Coroutines
+                launch(Dispatchers.Default) {
+                    connection.createChannel().use { channel ->
+                        val queueName = Config.inputQueue
+                        channel.queueDeclare(queueName, true, false, false, null)
 
-                while (true) {
-                    val data = IntArray(10000) { kotlin.random.Random.nextInt(0, 10) }
-                    val message = data.joinToString(",")
+                        while (true) {
+                            val data = IntArray(10000) { Random.nextInt(0, 100) }
+                            val message = data.joinToString(",")
 
-                    channel.basicPublish("", queueName, null, message.toByteArray())
-                    println("Sent: $message")
-                    Thread.sleep(5) // Wait for 5 seconds before sending the next message
+                            channel.basicPublish("", queueName, null, message.toByteArray())
+                        }
+                    }
                 }
             }
+
+            jobs.forEach { it.join() }
         }
     }
 }

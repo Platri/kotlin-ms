@@ -1,0 +1,32 @@
+# Ignoriere Gradle-Wrap-Dateien
+gradle/wrapper/
+
+# Ignoriere Build-Verzeichnis
+build/
+
+# Ignoriere temporäre Dateien und Verzeichnisse
+out/
+*.class
+*.log
+*.lock
+*.tmp
+*.swp
+*~
+.idea/
+*.iml
+
+# Ignoriere Betriebssystemdateien
+.DS_Store
+Thumbs.db
+
+# Ignoriere VCS-Dateien
+.git/
+.gitignore
+
+# Ignoriere IntelliJ IDEA Projektdateien
+*.ipr
+*.iws
+*.bak
+*.orig
+*.rej
+.env

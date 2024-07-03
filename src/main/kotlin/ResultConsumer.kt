@@ -16,7 +16,6 @@ object ResultConsumer {
 
                 val deliverCallback = { _: String, delivery: com.rabbitmq.client.Delivery ->
                     val message = String(delivery.body, Charsets.UTF_8)
-                    println("Received: $message")
                 }
 
                 channel.basicConsume(queueName, true, deliverCallback) { _ -> }
